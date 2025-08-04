@@ -1,3 +1,5 @@
+console.log('Power Calculator script loading...');
+
 // Get DOM elements
 const massInput = document.getElementById('mass');
 const auxPowerInput = document.getElementById('auxPower');
@@ -98,6 +100,7 @@ batteryMarginInput.addEventListener('keydown', function(e) {
 
 // Initialize calculation on page load
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing calculator...');
     calculatePower();
     
     // Add smooth transitions
@@ -122,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add event listeners for weight buttons
     const weightButtons = document.querySelectorAll('.use-weight-btn');
+    console.log('Found weight buttons:', weightButtons.length);
     weightButtons.forEach(button => {
         button.addEventListener('click', function() {
             const weight = this.getAttribute('data-weight');
@@ -140,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add event listeners for payload configuration buttons
     const configButtons = document.querySelectorAll('.config-btn');
+    console.log('Found config buttons:', configButtons.length);
     configButtons.forEach(button => {
         button.addEventListener('click', function() {
             const weight = parseInt(this.getAttribute('data-weight'));
@@ -197,6 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add event listeners for battery configuration buttons
     const batteryButtons = document.querySelectorAll('.battery-btn');
+    console.log('Found battery buttons:', batteryButtons.length);
     batteryButtons.forEach(button => {
         button.addEventListener('click', function() {
             const batteryCapacity = parseFloat(this.getAttribute('data-battery'));
