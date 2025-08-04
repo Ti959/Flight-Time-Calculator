@@ -108,6 +108,23 @@ batteryMarginInput.addEventListener('keydown', function(e) {
 // Initialize calculation on page load
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initializing calculator...');
+    
+    // Debug: Check if script is running
+    console.log('Script is running, checking for elements...');
+    
+    // Debug: Check if unit buttons exist
+    const unitButtonsDebug = document.querySelectorAll('.unit-btn');
+    console.log('Unit buttons found by class:', unitButtonsDebug.length);
+    unitButtonsDebug.forEach((btn, index) => {
+        console.log(`Unit button ${index}:`, btn.textContent, btn.getAttribute('data-unit'));
+    });
+    
+    // Debug: Check if unit buttons exist by ID
+    const unitGDebug = document.getElementById('unit-g');
+    const unitKgDebug = document.getElementById('unit-kg');
+    console.log('Unit-g button by ID:', unitGDebug);
+    console.log('Unit-kg button by ID:', unitKgDebug);
+    
     updateEquationDisplay();
     
     // Set default mass value based on current unit
@@ -172,6 +189,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.classList.remove('active');
                 this.textContent = 'Add';
             } else {
+                // Check if this is a lidar configuration
+                const isLidar = configName.includes('Lidar');
+                
+                if (isLidar) {
+                    // Remove any existing lidar configurations
+                    const lidarConfigs = ['Lidar Rev6', 'Lidar Rev7'];
+                    lidarConfigs.forEach(lidarName => {
+                        if (activeConfigs.has(lidarName)) {
+                            activeConfigs.delete(lidarName);
+                            // Find and update the corresponding button
+                            configButtons.forEach(btn => {
+                                const btnConfigName = btn.parentElement.querySelector('.config-name').textContent.replace(':', '');
+                                if (btnConfigName === lidarName) {
+                                    const btnWeight = parseInt(btn.getAttribute('data-weight'));
+                                    currentPayloadWeight -= btnWeight;
+                                    btn.classList.remove('active');
+                                    btn.textContent = 'Add';
+                                }
+                            });
+                        }
+                    });
+                }
+                
                 // Add configuration
                 activeConfigs.add(configName);
                 currentPayloadWeight += weight;
@@ -216,85 +256,95 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000);
     });
 
-    // Add event listeners for unit toggle buttons
+    // Add event listeners for unit toggle buttons - Multiple approaches for reliability
     const unitButtons = document.querySelectorAll('.unit-btn');
     console.log('Found unit buttons:', unitButtons.length);
+    
+    // Method 1: Class-based event listeners
     unitButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            console.log('Unit button clicked:', this.getAttribute('data-unit'));
-            const newUnit = this.getAttribute('data-unit');
-            if (newUnit !== currentUnit) {
-                // Store the old unit for conversion
-                const oldUnit = currentUnit;
-                
-                // Update unit state
-                currentUnit = newUnit;
-                conversionFactor = newUnit === 'kg' ? 1000 : 1;
-                
-                // Update button states
-                unitButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Update all displays with proper conversion
-                updateUnitDisplay(oldUnit);
-                
-                // Add visual feedback
-                this.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 200);
-            }
+        console.log('Adding event listener to button:', button.textContent);
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Unit button clicked (class method):', this.getAttribute('data-unit'));
+            handleUnitChange(this.getAttribute('data-unit'));
         });
     });
     
-    // Fallback: Add event listeners using IDs
+    // Method 2: ID-based event listeners
     const unitGButton = document.getElementById('unit-g');
     const unitKgButton = document.getElementById('unit-kg');
     console.log('Found unit-g button:', unitGButton);
     console.log('Found unit-kg button:', unitKgButton);
     
     if (unitGButton) {
-        unitGButton.addEventListener('click', function() {
+        unitGButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             console.log('Unit g button clicked (ID method)');
-            if (currentUnit !== 'g') {
-                const oldUnit = currentUnit;
-                currentUnit = 'g';
-                conversionFactor = 1;
-                
-                // Update button states
-                unitButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                
-                updateUnitDisplay(oldUnit);
-                
-                this.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 200);
-            }
+            handleUnitChange('g');
         });
     }
     
     if (unitKgButton) {
-        unitKgButton.addEventListener('click', function() {
+        unitKgButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             console.log('Unit kg button clicked (ID method)');
-            if (currentUnit !== 'kg') {
-                const oldUnit = currentUnit;
-                currentUnit = 'kg';
-                conversionFactor = 1000;
-                
-                // Update button states
-                unitButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                
-                updateUnitDisplay(oldUnit);
-                
-                this.style.transform = 'scale(1.1)';
+            handleUnitChange('kg');
+        });
+    }
+    
+    // Method 3: Direct onclick attributes as fallback
+    if (unitGButton) {
+        unitGButton.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Unit g button clicked (onclick method)');
+            handleUnitChange('g');
+        };
+    }
+    
+    if (unitKgButton) {
+        unitKgButton.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Unit kg button clicked (onclick method)');
+            handleUnitChange('kg');
+        };
+    }
+    
+    // Centralized unit change handler - make it globally accessible
+    window.handleUnitChange = function(newUnit) {
+        console.log('handleUnitChange called with:', newUnit, 'current unit:', currentUnit);
+        if (newUnit !== currentUnit) {
+            // Store the old unit for conversion
+            const oldUnit = currentUnit;
+            
+            // Update unit state
+            currentUnit = newUnit;
+            conversionFactor = newUnit === 'kg' ? 1000 : 1;
+            
+            console.log('Unit changed from', oldUnit, 'to', newUnit);
+            
+            // Update button states
+            unitButtons.forEach(btn => btn.classList.remove('active'));
+            const activeButton = newUnit === 'g' ? unitGButton : unitKgButton;
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+            
+            // Update all displays with proper conversion
+            updateUnitDisplay(oldUnit);
+            
+            // Add visual feedback
+            if (activeButton) {
+                activeButton.style.transform = 'scale(1.1)';
                 setTimeout(() => {
-                    this.style.transform = 'scale(1)';
+                    activeButton.style.transform = 'scale(1)';
                 }, 200);
             }
-        });
+        }
     }
 
     // Add event listeners for battery configuration buttons
