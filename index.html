@@ -24,7 +24,7 @@
             <div class="inputs-section">
                 <div class="input-group">
                     <label for="mass">Mass (g):</label>
-                    <input type="number" id="mass" value="1950" min="0" step="0.1">
+                    <input type="number" id="mass" value="1920" min="0" step="0.1">
                 </div>
                 
                 <div class="input-group">
@@ -59,21 +59,81 @@
                 <h3>Standard Weights:</h3>
                 <div class="weight-items">
                     <div class="weight-item">
-                        <span class="weight-name">E3 No Lidar:</span>
+                        <span class="weight-name">E3 Base No Lidar:</span>
                         <span class="weight-value">1920g</span>
                         <button class="use-weight-btn" data-weight="1920">Use</button>
                     </div>
-                    <div class="weight-item">
-                        <span class="weight-name">E3 Rev 6 Lidar:</span>
-                        <span class="weight-value">2320g</span>
-                        <button class="use-weight-btn" data-weight="2320">Use</button>
+                </div>
+            </div>
+
+            <div class="payload-configs">
+                <h3>Payload Configurations:</h3>
+                <div class="config-grid">
+                    <div class="config-item">
+                        <span class="config-name">Lidar Rev6:</span>
+                        <span class="config-weight">+450g</span>
+                        <button class="config-btn" data-weight="450">Add</button>
                     </div>
+                    <div class="config-item">
+                        <span class="config-name">Lidar Rev7:</span>
+                        <span class="config-weight">+500g</span>
+                        <button class="config-btn" data-weight="500">Add</button>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-name">RAD:</span>
+                        <span class="config-weight">+250g</span>
+                        <button class="config-btn" data-weight="250">Add</button>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-name">UT Core:</span>
+                        <span class="config-weight">+187g</span>
+                        <button class="config-btn" data-weight="187">Add</button>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-name">UT Probe:</span>
+                        <span class="config-weight">+66g</span>
+                        <button class="config-btn" data-weight="66">Add</button>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-name">UT Cleaning Head:</span>
+                        <span class="config-weight">+110g</span>
+                        <button class="config-btn" data-weight="110">Add</button>
+                    </div>
+                </div>
+                <div class="current-config">
+                    <span class="current-config-label">Current Payload:</span>
+                    <span class="current-config-value" id="currentPayload">0g</span>
+                    <button class="clear-config-btn" id="clearConfig">Clear</button>
+                </div>
+            </div>
+
+            <div class="battery-configs">
+                <h3>Battery Configuration:</h3>
+                <div class="battery-options">
+                    <div class="battery-option">
+                        <span class="battery-name">Standard Battery:</span>
+                        <span class="battery-specs">98.8 Wh</span>
+                        <button class="battery-btn" data-battery="98.8" data-weight="0">Use</button>
+                    </div>
+                    <div class="battery-option">
+                        <span class="battery-name">Big Battery:</span>
+                        <span class="battery-specs">160 Wh (+440g)</span>
+                        <button class="battery-btn" data-battery="160" data-weight="440">Use</button>
+                    </div>
+                </div>
+                <div class="current-battery">
+                    <span class="current-battery-label">Current Battery:</span>
+                    <span class="current-battery-value" id="currentBattery">98.8 Wh</span>
                 </div>
             </div>
 
             <div class="calculation-display">
                 <h3>Live Calculation:</h3>
                 <div class="calculation-steps">
+                    <div class="step">
+                        <span class="step-label">Total Weight:</span>
+                        <span class="step-value" id="totalWeight">1950g</span>
+                    </div>
                     <div class="step">
                         <span class="step-label">M/100:</span>
                         <span class="step-value" id="massOver100">19.50</span>

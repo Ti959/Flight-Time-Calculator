@@ -12,12 +12,23 @@ const lightingPowerDisplay = document.getElementById('lightingPowerDisplay');
 const totalPowerDisplay = document.getElementById('totalPower');
 const effectiveCapacityDisplay = document.getElementById('effectiveCapacity');
 const flightTimeDisplay = document.getElementById('flightTime');
+const currentPayloadDisplay = document.getElementById('currentPayload');
+const clearConfigBtn = document.getElementById('clearConfig');
+const currentBatteryDisplay = document.getElementById('currentBattery');
+const totalWeightDisplay = document.getElementById('totalWeight');
+
+// Payload configuration state
+let currentPayloadWeight = 0;
+let activeConfigs = new Set();
+let currentBatteryWeight = 0;
+let currentBatteryCapacity = 98.8;
 
 // Function to calculate power and flight time
 function calculatePower() {
-    const mass = parseFloat(massInput.value) || 0;
+    const baseMass = parseFloat(massInput.value) || 0;
+    const totalMass = baseMass + currentPayloadWeight + currentBatteryWeight;
     const auxPower = parseFloat(auxPowerInput.value) || 0;
-    const batterySize = parseFloat(batterySizeInput.value) || 0;
+    const batterySize = currentBatteryCapacity;
     const batteryMargin = parseFloat(batteryMarginInput.value) || 0;
     const lightingLevel = parseInt(lightingSlider.value) || 0;
     
@@ -25,7 +36,7 @@ function calculatePower() {
     const lightingPower = lightingLevel === 0 ? 0 : lightingLevel === 1 ? 20 : 50;
     
     // Calculate intermediate values
-    const massOver100 = mass / 100;
+    const massOver100 = totalMass / 100;
     const term1 = 6.3 * massOver100;
     const term2 = 0.66 * Math.pow(massOver100, 2);
     const totalPower = term1 + term2 + auxPower + lightingPower;
@@ -36,6 +47,7 @@ function calculatePower() {
     const flightTimeMinutes = flightTimeHours * 60;
     
     // Update displays
+    totalWeightDisplay.textContent = totalMass.toFixed(0) + 'g';
     massOver100Display.textContent = massOver100.toFixed(2);
     term1Display.textContent = term1.toFixed(2);
     term2Display.textContent = term2.toFixed(2);
@@ -123,6 +135,100 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.style.background = '#6c5ce7';
                 this.textContent = 'Use';
             }, 1000);
+        });
+    });
+
+    // Add event listeners for payload configuration buttons
+    const configButtons = document.querySelectorAll('.config-btn');
+    configButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const weight = parseInt(this.getAttribute('data-weight'));
+            const configName = this.parentElement.querySelector('.config-name').textContent.replace(':', '');
+            
+            if (activeConfigs.has(configName)) {
+                // Remove configuration
+                activeConfigs.delete(configName);
+                currentPayloadWeight -= weight;
+                this.classList.remove('active');
+                this.textContent = 'Add';
+            } else {
+                // Add configuration
+                activeConfigs.add(configName);
+                currentPayloadWeight += weight;
+                this.classList.add('active');
+                this.textContent = 'Remove';
+            }
+            
+            // Update displays
+            currentPayloadDisplay.textContent = currentPayloadWeight + 'g';
+            calculatePower();
+            
+            // Add visual feedback
+            this.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+        });
+    });
+
+    // Add event listener for clear configuration button
+    clearConfigBtn.addEventListener('click', function() {
+        currentPayloadWeight = 0;
+        activeConfigs.clear();
+        currentPayloadDisplay.textContent = '0g';
+        
+        // Reset all config buttons
+        const configButtons = document.querySelectorAll('.config-btn');
+        configButtons.forEach(button => {
+            button.classList.remove('active');
+            button.textContent = 'Add';
+        });
+        
+        calculatePower();
+        
+        // Add visual feedback
+        this.style.background = '#4CAF50';
+        this.textContent = 'Cleared!';
+        setTimeout(() => {
+            this.style.background = '#95a5a6';
+            this.textContent = 'Clear';
+        }, 1000);
+    });
+
+    // Add event listeners for battery configuration buttons
+    const batteryButtons = document.querySelectorAll('.battery-btn');
+    batteryButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const batteryCapacity = parseFloat(this.getAttribute('data-battery'));
+            const batteryWeight = parseInt(this.getAttribute('data-weight'));
+            
+            // Update battery state
+            currentBatteryCapacity = batteryCapacity;
+            currentBatteryWeight = batteryWeight;
+            
+            // Update battery display
+            currentBatteryDisplay.textContent = batteryCapacity + ' Wh';
+            
+            // Update battery input field
+            batterySizeInput.value = batteryCapacity;
+            
+            // Reset all battery buttons
+            batteryButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.textContent = 'Use';
+            });
+            
+            // Activate current button
+            this.classList.add('active');
+            this.textContent = 'Active';
+            
+            calculatePower();
+            
+            // Add visual feedback
+            this.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
         });
     });
 });

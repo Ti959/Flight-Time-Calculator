@@ -190,6 +190,186 @@ h3 {
     transform: translateY(-1px);
 }
 
+.payload-configs {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-left: 4px solid #e74c3c;
+}
+
+.config-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.config-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: white;
+    border-radius: 8px;
+    border-left: 3px solid #e74c3c;
+}
+
+.config-name {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.config-weight {
+    font-weight: 700;
+    color: #e74c3c;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.config-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.config-btn:hover {
+    background: #c0392b;
+    transform: translateY(-1px);
+}
+
+.config-btn.active {
+    background: #27ae60;
+}
+
+.current-config {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: white;
+    border-radius: 8px;
+    border-left: 3px solid #e74c3c;
+    margin-top: 10px;
+}
+
+.current-config-label {
+    font-weight: 600;
+    color: #555;
+}
+
+.current-config-value {
+    font-weight: 700;
+    color: #e74c3c;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+}
+
+.clear-config-btn {
+    background: #95a5a6;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.clear-config-btn:hover {
+    background: #7f8c8d;
+    transform: translateY(-1px);
+}
+
+.battery-configs {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-left: 4px solid #f39c12;
+}
+
+.battery-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.battery-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: white;
+    border-radius: 8px;
+    border-left: 3px solid #f39c12;
+}
+
+.battery-name {
+    font-weight: 600;
+    color: #555;
+}
+
+.battery-specs {
+    font-weight: 700;
+    color: #f39c12;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.battery-btn {
+    background: #f39c12;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.battery-btn:hover {
+    background: #e67e22;
+    transform: translateY(-1px);
+}
+
+.battery-btn.active {
+    background: #27ae60;
+}
+
+.current-battery {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: white;
+    border-radius: 8px;
+    border-left: 3px solid #f39c12;
+    margin-top: 10px;
+}
+
+.current-battery-label {
+    font-weight: 600;
+    color: #555;
+}
+
+.current-battery-value {
+    font-weight: 700;
+    color: #f39c12;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+}
+
 .flight-time-display {
     background: #f8f9fa;
     border-radius: 12px;
