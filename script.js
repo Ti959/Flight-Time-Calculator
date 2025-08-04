@@ -218,8 +218,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add event listeners for unit toggle buttons
     const unitButtons = document.querySelectorAll('.unit-btn');
+    console.log('Found unit buttons:', unitButtons.length);
     unitButtons.forEach(button => {
         button.addEventListener('click', function() {
+            console.log('Unit button clicked:', this.getAttribute('data-unit'));
             const newUnit = this.getAttribute('data-unit');
             if (newUnit !== currentUnit) {
                 // Store the old unit for conversion
@@ -244,6 +246,56 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+    
+    // Fallback: Add event listeners using IDs
+    const unitGButton = document.getElementById('unit-g');
+    const unitKgButton = document.getElementById('unit-kg');
+    console.log('Found unit-g button:', unitGButton);
+    console.log('Found unit-kg button:', unitKgButton);
+    
+    if (unitGButton) {
+        unitGButton.addEventListener('click', function() {
+            console.log('Unit g button clicked (ID method)');
+            if (currentUnit !== 'g') {
+                const oldUnit = currentUnit;
+                currentUnit = 'g';
+                conversionFactor = 1;
+                
+                // Update button states
+                unitButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                updateUnitDisplay(oldUnit);
+                
+                this.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 200);
+            }
+        });
+    }
+    
+    if (unitKgButton) {
+        unitKgButton.addEventListener('click', function() {
+            console.log('Unit kg button clicked (ID method)');
+            if (currentUnit !== 'kg') {
+                const oldUnit = currentUnit;
+                currentUnit = 'kg';
+                conversionFactor = 1000;
+                
+                // Update button states
+                unitButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                updateUnitDisplay(oldUnit);
+                
+                this.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 200);
+            }
+        });
+    }
 
     // Add event listeners for battery configuration buttons
     const batteryButtons = document.querySelectorAll('.battery-btn');
