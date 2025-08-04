@@ -25,9 +25,15 @@ let activeConfigs = new Set();
 let currentBatteryWeight = 0;
 let currentBatteryCapacity = 98.8;
 
+// Unit state
+let currentUnit = 'g';
+let conversionFactor = 1; // 1 for g, 1000 for kg
+
 // Function to calculate power and flight time
 function calculatePower() {
-    const baseMass = parseFloat(massInput.value) || 0;
+    const baseMassInput = parseFloat(massInput.value) || 0;
+    // Convert input mass to grams for calculation
+    const baseMass = convertToGrams(baseMassInput, currentUnit);
     const totalMass = baseMass + currentPayloadWeight + currentBatteryWeight;
     const auxPower = parseFloat(auxPowerInput.value) || 0;
     const batterySize = currentBatteryCapacity;
@@ -37,7 +43,7 @@ function calculatePower() {
     // Calculate lighting power based on slider position
     const lightingPower = lightingLevel === 0 ? 0 : lightingLevel === 1 ? 20 : 50;
     
-    // Calculate intermediate values
+    // Calculate intermediate values (always use grams for calculation)
     const massOver100 = totalMass / 100;
     const term1 = 6.3 * massOver100;
     const term2 = 0.66 * Math.pow(massOver100, 2);
@@ -49,8 +55,9 @@ function calculatePower() {
     const flightTimeMinutes = flightTimeHours * 60;
     
     // Update displays
-    totalWeightDisplay.textContent = totalMass.toFixed(0) + 'g';
-    massOver100Display.textContent = massOver100.toFixed(2);
+    const displayMass = convertFromGrams(totalMass, currentUnit);
+    totalWeightDisplay.textContent = displayMass.toFixed(currentUnit === 'kg' ? 3 : 0) + currentUnit;
+    massOver100Display.textContent = (currentUnit === 'kg' ? totalMass / 0.1 : massOver100).toFixed(2);
     term1Display.textContent = term1.toFixed(2);
     term2Display.textContent = term2.toFixed(2);
     auxPowerDisplay.textContent = auxPower.toFixed(1);
@@ -101,6 +108,13 @@ batteryMarginInput.addEventListener('keydown', function(e) {
 // Initialize calculation on page load
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initializing calculator...');
+    updateEquationDisplay();
+    
+    // Set default mass value based on current unit
+    const defaultMassGrams = 1920;
+    const defaultMass = convertFromGrams(defaultMassGrams, currentUnit);
+    massInput.value = defaultMass.toFixed(currentUnit === 'kg' ? 3 : 0);
+    
     calculatePower();
     
     // Add smooth transitions
@@ -128,8 +142,9 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Found weight buttons:', weightButtons.length);
     weightButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const weight = this.getAttribute('data-weight');
-            massInput.value = weight;
+            const weight = parseFloat(this.getAttribute('data-weight'));
+            const convertedWeight = convertFromGrams(weight, currentUnit);
+            massInput.value = convertedWeight.toFixed(currentUnit === 'kg' ? 3 : 0);
             calculatePower();
             
             // Add visual feedback
@@ -165,7 +180,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Update displays
-            currentPayloadDisplay.textContent = currentPayloadWeight + 'g';
+            const convertedPayload = convertFromGrams(currentPayloadWeight, currentUnit);
+            currentPayloadDisplay.textContent = convertedPayload.toFixed(currentUnit === 'kg' ? 3 : 0) + currentUnit;
             calculatePower();
             
             // Add visual feedback
@@ -180,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
     clearConfigBtn.addEventListener('click', function() {
         currentPayloadWeight = 0;
         activeConfigs.clear();
-        currentPayloadDisplay.textContent = '0g';
+        currentPayloadDisplay.textContent = '0' + currentUnit;
         
         // Reset all config buttons
         const configButtons = document.querySelectorAll('.config-btn');
@@ -198,6 +214,35 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.background = '#95a5a6';
             this.textContent = 'Clear';
         }, 1000);
+    });
+
+    // Add event listeners for unit toggle buttons
+    const unitButtons = document.querySelectorAll('.unit-btn');
+    unitButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const newUnit = this.getAttribute('data-unit');
+            if (newUnit !== currentUnit) {
+                // Store the old unit for conversion
+                const oldUnit = currentUnit;
+                
+                // Update unit state
+                currentUnit = newUnit;
+                conversionFactor = newUnit === 'kg' ? 1000 : 1;
+                
+                // Update button states
+                unitButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update all displays with proper conversion
+                updateUnitDisplay(oldUnit);
+                
+                // Add visual feedback
+                this.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 200);
+            }
+        });
     });
 
     // Add event listeners for battery configuration buttons
@@ -238,6 +283,69 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Unit conversion functions
+function convertToGrams(value, unit) {
+    return unit === 'kg' ? value * 1000 : value;
+}
+
+function convertFromGrams(value, unit) {
+    return unit === 'kg' ? value / 1000 : value;
+}
+
+function updateEquationDisplay() {
+    const equationElement = document.querySelector('.equation');
+    if (currentUnit === 'kg') {
+        equationElement.innerHTML = 'P(W) = 6.3(M/0.1) + 0.66(M/0.1)² + P<sub>aux</sub> + P<sub>lights</sub>';
+    } else {
+        equationElement.innerHTML = 'P(W) = 6.3(M/100) + 0.66(M/100)² + P<sub>aux</sub> + P<sub>lights</sub>';
+    }
+}
+
+function updateUnitDisplay(oldUnit) {
+    // Update mass input label
+    document.getElementById('massUnit').textContent = currentUnit;
+    
+    // Update current mass value - convert from old unit to grams, then to new unit
+    const currentMass = parseFloat(massInput.value) || 0;
+    const massInGrams = convertToGrams(currentMass, oldUnit);
+    const convertedMass = convertFromGrams(massInGrams, currentUnit);
+    massInput.value = convertedMass.toFixed(currentUnit === 'kg' ? 3 : 0);
+    
+    // Update weight displays
+    const weightElements = document.querySelectorAll('.weight-value');
+    weightElements.forEach(element => {
+        const weight = parseFloat(element.getAttribute('data-weight'));
+        const convertedWeight = convertFromGrams(weight, currentUnit);
+        element.textContent = convertedWeight.toFixed(currentUnit === 'kg' ? 3 : 0) + currentUnit;
+    });
+    
+    // Update config weight displays
+    const configWeightElements = document.querySelectorAll('.config-weight');
+    configWeightElements.forEach(element => {
+        const weight = parseFloat(element.getAttribute('data-weight'));
+        const convertedWeight = convertFromGrams(weight, currentUnit);
+        element.textContent = '+' + convertedWeight.toFixed(currentUnit === 'kg' ? 3 : 0) + currentUnit;
+    });
+    
+    // Update battery weight display
+    const batteryWeightElements = document.querySelectorAll('.battery-weight');
+    batteryWeightElements.forEach(element => {
+        const weight = parseFloat(element.getAttribute('data-weight'));
+        const convertedWeight = convertFromGrams(weight, currentUnit);
+        element.textContent = '+' + convertedWeight.toFixed(currentUnit === 'kg' ? 3 : 0) + currentUnit;
+    });
+    
+    // Update current payload display
+    const convertedPayload = convertFromGrams(currentPayloadWeight, currentUnit);
+    currentPayloadDisplay.textContent = convertedPayload.toFixed(currentUnit === 'kg' ? 3 : 0) + currentUnit;
+    
+    // Update equation display
+    updateEquationDisplay();
+    
+    // Recalculate power
+    calculatePower();
+}
 
 // Add input validation
 function validateInput(input) {

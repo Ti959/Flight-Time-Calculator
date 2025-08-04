@@ -30,14 +30,57 @@ body {
 .header {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 20px;
+    justify-content: space-between;
     margin-bottom: 30px;
+    position: relative;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
 .fpl-logo {
     height: 60px;
     width: auto;
+}
+
+.unit-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8f9fa;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 2px solid #e1e5e9;
+}
+
+.unit-label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.unit-btn {
+    background: #e1e5e9;
+    color: #666;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.unit-btn:hover {
+    background: #d1d5d9;
+}
+
+.unit-btn.active {
+    background: #667eea;
+    color: white;
 }
 
 h1 {

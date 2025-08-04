@@ -29,8 +29,15 @@
     <div class="container">
         <div class="calculator-card">
                 <div class="header">
-                    <img src="fpl_logo.png" alt="FPL Logo" class="fpl-logo">
-                    <h1>Power Calculator</h1>
+                    <div class="header-content">
+                        <img src="fpl_logo.png" alt="FPL Logo" class="fpl-logo">
+                        <h1>Power Calculator</h1>
+                    </div>
+                    <div class="unit-toggle">
+                        <span class="unit-label">Units:</span>
+                        <button class="unit-btn active" data-unit="g">g</button>
+                        <button class="unit-btn" data-unit="kg">kg</button>
+                    </div>
                 </div>
             
             <div class="equation-display">
@@ -42,7 +49,7 @@
 
             <div class="inputs-section">
                 <div class="input-group">
-                    <label for="mass">Mass (g):</label>
+                    <label for="mass">Mass (<span id="massUnit">g</span>):</label>
                     <input type="number" id="mass" value="1920" min="0" step="0.1">
                 </div>
                 
@@ -79,7 +86,7 @@
                 <div class="weight-items">
                     <div class="weight-item">
                         <span class="weight-name">E3 Base No Lidar:</span>
-                        <span class="weight-value">1920g</span>
+                        <span class="weight-value" data-weight="1920">1920g</span>
                         <button class="use-weight-btn" data-weight="1920" style="display: inline-block; padding: 8px 16px; background: #6c5ce7; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">Use</button>
                     </div>
                 </div>
@@ -90,32 +97,32 @@
                 <div class="config-grid">
                     <div class="config-item">
                         <span class="config-name">Lidar Rev6:</span>
-                        <span class="config-weight">+450g</span>
+                        <span class="config-weight" data-weight="450">+450g</span>
                         <button class="config-btn" data-weight="450" style="display: inline-block; padding: 4px 8px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Add</button>
                     </div>
                     <div class="config-item">
                         <span class="config-name">Lidar Rev7:</span>
-                        <span class="config-weight">+500g</span>
+                        <span class="config-weight" data-weight="500">+500g</span>
                         <button class="config-btn" data-weight="500" style="display: inline-block; padding: 4px 8px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Add</button>
                     </div>
                     <div class="config-item">
                         <span class="config-name">RAD:</span>
-                        <span class="config-weight">+250g</span>
+                        <span class="config-weight" data-weight="250">+250g</span>
                         <button class="config-btn" data-weight="250" style="display: inline-block; padding: 4px 8px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Add</button>
                     </div>
                     <div class="config-item">
                         <span class="config-name">UT Core:</span>
-                        <span class="config-weight">+187g</span>
+                        <span class="config-weight" data-weight="187">+187g</span>
                         <button class="config-btn" data-weight="187" style="display: inline-block; padding: 4px 8px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Add</button>
                     </div>
                     <div class="config-item">
                         <span class="config-name">UT Probe:</span>
-                        <span class="config-weight">+66g</span>
+                        <span class="config-weight" data-weight="66">+66g</span>
                         <button class="config-btn" data-weight="66" style="display: inline-block; padding: 4px 8px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Add</button>
                     </div>
                     <div class="config-item">
                         <span class="config-name">UT Cleaning Head:</span>
-                        <span class="config-weight">+110g</span>
+                        <span class="config-weight" data-weight="110">+110g</span>
                         <button class="config-btn" data-weight="110" style="display: inline-block; padding: 4px 8px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Add</button>
                     </div>
                 </div>
@@ -136,7 +143,7 @@
                     </div>
                     <div class="battery-option">
                         <span class="battery-name">Big Battery:</span>
-                        <span class="battery-specs">160 Wh (+440g)</span>
+                        <span class="battery-specs">160 Wh (<span class="battery-weight" data-weight="440">+440g</span>)</span>
                         <button class="battery-btn" data-battery="160" data-weight="440" style="display: inline-block; padding: 6px 12px; background: #f39c12; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">Use</button>
                     </div>
                 </div>
