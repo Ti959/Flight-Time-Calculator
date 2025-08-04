@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+                    <div class="calculator-card">
+                <div class="header">
+                    <img src="fpl_logo.png" alt="FPL Logo" class="fpl-logo">
+                    <h1>Power Calculator</h1>
+                </div>
+            
+            <div class="equation-display">
+                <h2>Equation:</h2>
+                <div class="equation">
+                    P(W) = 6.3(M/100) + 0.66(M/100)² + P<sub>aux</sub> + P<sub>lights</sub>
+                </div>
+            </div>
+
+            <div class="inputs-section">
+                <div class="input-group">
+                    <label for="mass">Mass (g):</label>
+                    <input type="number" id="mass" value="1950" min="0" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="auxPower">Aux Power (W):</label>
+                    <input type="number" id="auxPower" value="16" min="0" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="batterySize">Battery Size (Wh):</label>
+                    <input type="number" id="batterySize" value="98.8" min="0" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="batteryMargin">Battery Margin (%):</label>
+                    <input type="number" id="batteryMargin" value="10" min="0" max="100" step="0.1">
+                </div>
+            </div>
+
+            <div class="lighting-section">
+                <h3>Lighting Power:</h3>
+                <div class="lighting-slider">
+                    <input type="range" id="lightingSlider" min="0" max="2" value="0" step="1">
+                    <div class="lighting-labels">
+                        <span class="lighting-label">No Lights (+0W)</span>
+                        <span class="lighting-label">E2 Lights (+20W)</span>
+                        <span class="lighting-label">Full Lights (+50W)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cheat-list">
+                <h3>Standard Weights:</h3>
+                <div class="weight-items">
+                    <div class="weight-item">
+                        <span class="weight-name">E3 No Lidar:</span>
+                        <span class="weight-value">1920g</span>
+                        <button class="use-weight-btn" data-weight="1920">Use</button>
+                    </div>
+                    <div class="weight-item">
+                        <span class="weight-name">E3 Rev 6 Lidar:</span>
+                        <span class="weight-value">2320g</span>
+                        <button class="use-weight-btn" data-weight="2320">Use</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="calculation-display">
+                <h3>Live Calculation:</h3>
+                <div class="calculation-steps">
+                    <div class="step">
+                        <span class="step-label">M/100:</span>
+                        <span class="step-value" id="massOver100">19.50</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">6.3(M/100):</span>
+                        <span class="step-value" id="term1">122.85</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">0.66(M/100)²:</span>
+                        <span class="step-value" id="term2">250.47</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">P<sub>aux</sub>:</span>
+                        <span class="step-value" id="auxPowerDisplay">16.0</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">P<sub>lights</sub>:</span>
+                        <span class="step-value" id="lightingPowerDisplay">0.0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result">
+                <h2>Total Power:</h2>
+                <div class="power-result" id="totalPower">389.32 W</div>
+            </div>
+            
+            <div class="flight-time-display">
+                <h3>Flight Time Calculation:</h3>
+                <div class="calculation-steps">
+                    <div class="step">
+                        <span class="step-label">Effective Battery Capacity:</span>
+                        <span class="step-value" id="effectiveCapacity">90.0 Wh</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">Flight Time:</span>
+                        <span class="step-value" id="flightTime">13.9 min</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
